@@ -45,10 +45,8 @@
     "react-native": "*"
   },
   "devDependencies": {
-    "@capacitor/core": "^6.1.2",
     "gulp": "^5.0.0",
     "gulp-footer": "^2.1.0",
-    "gulp-rename": "^2.0.0",
     "gulp-strip-import-export": "^1.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "lodash": "^4.17.21",
