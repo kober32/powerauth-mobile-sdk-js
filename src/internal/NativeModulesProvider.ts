@@ -19,11 +19,11 @@ import { NativeModulesProviderIfc } from "./NativeModulesProviderIfc";
 import { NativePowerAuth } from "./NativePowerAuth";
 
 class Provider implements NativeModulesProviderIfc {
-    PowerAuthObjectRegister = NativeModulesProvider.PowerAuthObjectRegister;
-    PowerAuthEncryptor = NativeModulesProvider.PowerAuthEncryptor
-    PowerAuthPassphraseMeter = NativeModulesProvider.PowerAuthPassphraseMeter
-    PowerAuthPassword = NativeModulesProvider.PowerAuthPassword
+    PowerAuthObjectRegister = NativeModules.PowerAuthObjectRegister;
+    PowerAuthEncryptor = NativeModules.PowerAuthEncryptor
+    PowerAuthPassphraseMeter = NativeModules.PowerAuthPassphraseMeter
+    PowerAuthPassword = NativeModules.PowerAuthPassword
     PowerAuth = new NativePowerAuth();
 }
 
-export const NativeModulesProvider = NativeModules as NativeModulesProviderIfc
+export const NativeModulesProvider = new Provider() as NativeModulesProviderIfc
