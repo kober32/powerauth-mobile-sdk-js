@@ -1,6 +1,5 @@
 // Dependencies
 const gulp = require("gulp"); // gulp itself
-const rename = require('gulp-rename'); // file rename
 const ts = require("gulp-typescript"); // to be able to compiles typescript
 const footer = require("gulp-footer"); // file appender
 const stripImportExport = require("gulp-strip-import-export"); // import/export removal to be able to compile into single file js
@@ -72,7 +71,6 @@ const tmpDir = ".build";
     const copyCAPPackageJson = () => 
         gulp
             .src(CAP_packageJson)
-            .pipe(rename("package.json"))
             .pipe(gulp.dest(CAP_buildDir));
 
     const packCAPPackage = () => exec(`pushd ${CAP_buildDir} && npm pack`);
@@ -84,9 +82,10 @@ const tmpDir = ".build";
 *  CORDOVA.JS SECTION  *
 ************************/
 {
-    const CDV_packageJson = "cordova-support/package-cordova.json";
-    const CDV_tsConfig = "cordova-support/tsconfig-cordova.json";
-    const CDV_patchSourcesDir = "cordova-support/cdv";
+    const CDV_patchSourcesDir = "other-platforms-support/cordova";
+    const CDV_packageJson = `${CDV_patchSourcesDir}/package.json`;
+    const CDV_pluginXml = `${CDV_patchSourcesDir}/plugin.xml`;
+    const CDV_tsConfig = `${CDV_patchSourcesDir}/tsconfig.json`;
     const CDV_buildDir = `${buildDir}/cdv`;
     const CDV_tempDir = `${tmpDir}/cdv`
     const CDV_sources = [ "src/internal/NativeModulesProvider.ts", "src/*/*.ts", "src/PowerAuth**.ts" ]; // order matters!
@@ -122,19 +121,18 @@ const tmpDir = ".build";
 
     const copyCDVFiles = () =>
         gulp
-            .src(JSON.parse(fs.readFileSync(CDV_packageJson, 'utf8')).files.filter((file) => !file.startsWith(`${CDV_libDir}/`)), { base: "." })
+            .src(JSON.parse(fs.readFileSync(CDV_packageJson, 'utf8')).files.filter((file) => !file.startsWith(`${CDV_libDir}/`) && !file != "plugin.xml"), { base: "." })
             .pipe(gulp.dest(CDV_buildDir));
 
-    const copyCDVPackageJson = () => 
+    const copyCDVSupportFiles = () => 
         gulp
-            .src(CDV_packageJson)
-            .pipe(rename("package.json"))
+            .src([CDV_packageJson, CDV_pluginXml])
             .pipe(gulp.dest(CDV_buildDir));
 
     const packCDVPackage = () => exec(`pushd ${CDV_buildDir} && npm pack`);
 
     // join cordova compile and modify for export task
-    var CDV_buildTask = gulp.series(clearCDVall, copyCDVSourceFiles, copyCDVPatchSourceFiles, compileCDVTask, exportCDVTask, copyCDVFiles, copyCDVPackageJson, packCDVPackage, clearCDVtemp);
+    var CDV_buildTask = gulp.series(clearCDVall, copyCDVSourceFiles, copyCDVPatchSourceFiles, compileCDVTask, exportCDVTask, copyCDVFiles, copyCDVSupportFiles, packCDVPackage, clearCDVtemp);
 }
 
 let cleanBuild = () => rimraf([ buildDir ])
