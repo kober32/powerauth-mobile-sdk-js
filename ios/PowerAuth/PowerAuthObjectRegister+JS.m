@@ -16,10 +16,11 @@
 
 #import "PowerAuthObjectRegister.h"
 #import "PowerAuthData.h"
-#import "PowerAuthEncryptorModule.h"
-
-#import <React/RCTConvert.h>
-#import <React/RCTInvalidating.h>
+#import "Defs.h"
+// TODO: solve
+//#import "PowerAuthEncryptorModule.h"
+//#import <React/RCTConvert.h>
+//#import <React/RCTInvalidating.h>
 
 @import PowerAuthCore;
 
@@ -27,7 +28,7 @@
  This class category exports several debug methods to JavaScript.
  The 'debug' methods are available only if library is compiled in DEBUG configuration.
  */
-@interface PowerAuthObjectRegister (JS) <RCTInvalidating>
+@interface PowerAuthObjectRegister (JS) // <RCTInvalidating> TODO:// resolve
 @end
 
 @implementation PowerAuthObjectRegister (JS)
@@ -47,14 +48,15 @@
     return NO;
 }
 
-RCT_EXPORT_METHOD(isValidNativeObject:(id)objectId
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-{
+PAJS_METHOD_START(
+  isValidNativeObject,
+  PAJS_ARGUMENT(0, objectId, id)
+)
     resolve(@([self containsObjectWithId:objectId]));
-}
+PAJS_METHOD_END
 
-#if DEBUG
+// TODO: temporary reverted if
+#if !DEBUG
 
 // MARK: - JS DEBUG
 
@@ -165,18 +167,19 @@ RCT_EXPORT_METHOD(debugCommand:(NSString*)command
 
 // MARK: - JS RELEASE
 
-RCT_EXPORT_METHOD(debugDump:(id)instanceId
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-{
+PAJS_METHOD_START(
+  debugDump,
+  PAJS_ARGUMENT(0, instanceId, NSString*)
+)
     resolve(nil);
-}
 
-RCT_EXPORT_METHOD(debugCommand:(NSString*)command
-                  options:(NSDictionary*)options
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-{
+PAJS_METHOD_END
+
+PAJS_METHOD_START(
+  debugCommand,
+  PAJS_ARGUMENT(0, command, NSString*)
+  PAJS_ARGUMENT(1, options, NSDictionary*)
+)
     resolve(nil);
 }
 #endif // DEBUG

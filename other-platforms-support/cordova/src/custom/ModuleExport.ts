@@ -1,5 +1,5 @@
-/**
- * Copyright 2020 Wultra s.r.o.
+/*
+ * Copyright 2024 Wultra s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#import "Defs.h"
+// @ts-nocheck
 
-PAJS_MODULE(PowerAuthModule)
-
-@end
+module.exports = {
+    PowerAuth: PowerAuth, 
+}

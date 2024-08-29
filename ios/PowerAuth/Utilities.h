@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import <React/RCTBridgeModule.h>
+#import "Defs.h"
 
 #ifdef __cplusplus
     // C++

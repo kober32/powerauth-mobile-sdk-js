@@ -88,22 +88,22 @@ const tmpDir = ".build";
     const CDV_tsConfig = `${CDV_patchSourcesDir}/tsconfig.json`;
     const CDV_buildDir = `${buildDir}/cdv`;
     const CDV_tempDir = `${tmpDir}/cdv`
-    const CDV_sources = [ "src/internal/NativeModulesProvider.ts", "src/*/*.ts", "src/PowerAuth**.ts" ]; // order matters!
+    // order matters in sources!
+    const CDV_sources = [ "src/internal/NativePowerAuth.ts", "src/internal/NativeModulesProvider.ts", "src/debug/*.ts", "src/internal/*.ts", "src/model/*.ts", "src/PowerAuth**.ts", "src/custom/ModuleExport.ts" ];
     const CDV_libDir = "lib";
     const CDV_outFileDir = `${CDV_buildDir}/${CDV_libDir}`;
-    const CDV_outFile = "powerauth.js";
 
     const clearCDVall = () => rimraf([ CDV_buildDir, CDV_tempDir ]);
     const clearCDVtemp = () => rimraf([ CDV_tempDir ]);
 
     const copyCDVSourceFiles = () =>
         gulp
-            .src(CDV_sources, { base: "." })
+            .src(CDV_sources, { base: ".", allowEmpty: true })
             .pipe(gulp.dest(CDV_tempDir));
 
     const copyCDVPatchSourceFiles = () =>
         gulp
-            .src(CDV_sources.map((v) => `${CDV_patchSourcesDir}/${v}`), { base: CDV_patchSourcesDir })
+            .src([`${CDV_patchSourcesDir}/src/**/**.ts`], { base: CDV_patchSourcesDir })
             .pipe(gulp.dest(CDV_tempDir));
     
     const compileCDVTask = () =>
@@ -111,12 +111,6 @@ const tmpDir = ".build";
             .src(CDV_sources.map((v) => `${CDV_tempDir}/${v}`), { base: CDV_tempDir })
             .pipe(stripImportExport())
             .pipe(ts(CDV_tsConfig))
-            .pipe(gulp.dest(CDV_outFileDir));
-
-    const exportCDVTask = () =>
-        gulp
-            .src(`${CDV_outFileDir}/${CDV_outFile}`)
-            .pipe(footer("module.exports = PowerAuthPlugin;"))
             .pipe(gulp.dest(CDV_outFileDir));
 
     const copyCDVFiles = () =>
@@ -132,7 +126,7 @@ const tmpDir = ".build";
     const packCDVPackage = () => exec(`pushd ${CDV_buildDir} && npm pack`);
 
     // join cordova compile and modify for export task
-    var CDV_buildTask = gulp.series(clearCDVall, copyCDVSourceFiles, copyCDVPatchSourceFiles, compileCDVTask, exportCDVTask, copyCDVFiles, copyCDVSupportFiles, packCDVPackage, clearCDVtemp);
+    var CDV_buildTask = gulp.series(clearCDVall, copyCDVSourceFiles, copyCDVPatchSourceFiles, compileCDVTask, copyCDVFiles, copyCDVSupportFiles, packCDVPackage, clearCDVtemp);
 }
 
 let cleanBuild = () => rimraf([ buildDir ])

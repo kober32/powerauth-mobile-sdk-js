@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#import <React/RCTBridgeModule.h>
-#import <React/RCTInvalidating.h>
+#import "Defs.h"
 #import "Errors.h"
 
 /**
@@ -23,7 +22,7 @@
  The object is identified by an unique identifier created at the time of registration
  or by application provided identifier.
  */
-@interface PowerAuthObjectRegister : NSObject<RCTBridgeModule>
+PAJS_MODULE(PowerAuthObjectRegister)
 
 /**
  Register object and return auto generated object identifier.

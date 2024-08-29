@@ -20,22 +20,28 @@ import { NativePowerAuthIfc } from "./NativePowerAuthIfc";
 
 export class NativePowerAuth implements NativePowerAuthIfc {
 
-    private readonly pluginName = "PowerAuthPlugin";
+    private readonly pluginName = "PowerAuthModule";
 
     callNative<T>(name: string, ...args): Promise<T> {
-        new Promise<T>(
+        console.log("callNative");
+        return new Promise<T>(
             (resolve, reject) => {
                 cordova.exec(
                     // success callback
-                    (result) => { resolve(JSON.parse(result)); },
+                    (response) => { 
+                        const parsed = JSON.parse(response);
+                        resolve(parsed.result); 
+                    },
                     // error callback
-                    (data: any) => { reject(data) },
+                    (error) => { 
+                        reject(error) 
+                    },
                     // native platform plugin name
                     this.pluginName,
                     // function name
                     name,
                     // function arguments
-                    args
+                    ...args
                 );
             }
         );
