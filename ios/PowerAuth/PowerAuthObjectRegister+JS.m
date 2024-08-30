@@ -48,11 +48,11 @@
     return NO;
 }
 
-PAJS_METHOD_START(
-  isValidNativeObject,
-  PAJS_ARGUMENT(0, objectId, id)
-)
+PAJS_METHOD_START(isValidNativeObject,
+                  PAJS_ARGUMENT(0, objectId, id))
+{
     resolve(@([self containsObjectWithId:objectId]));
+}
 PAJS_METHOD_END
 
 // TODO: temporary reverted if
@@ -167,21 +167,21 @@ RCT_EXPORT_METHOD(debugCommand:(NSString*)command
 
 // MARK: - JS RELEASE
 
-PAJS_METHOD_START(
-  debugDump,
-  PAJS_ARGUMENT(0, instanceId, NSString*)
-)
-    resolve(nil);
-
-PAJS_METHOD_END
-
-PAJS_METHOD_START(
-  debugCommand,
-  PAJS_ARGUMENT(0, command, NSString*)
-  PAJS_ARGUMENT(1, options, NSDictionary*)
-)
+PAJS_METHOD_START(debugDump,
+                  PAJS_ARGUMENT(0, instanceId, NSString*))
+{
     resolve(nil);
 }
+PAJS_METHOD_END
+
+PAJS_METHOD_START(debugCommand,
+                  PAJS_ARGUMENT(0, command, NSString*)
+                  PAJS_ARGUMENT(1, options, NSDictionary*))
+{
+    resolve(nil);
+}
+PAJS_METHOD_END
+
 #endif // DEBUG
 
 @end

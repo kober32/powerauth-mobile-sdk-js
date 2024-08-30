@@ -45,12 +45,7 @@ PAJS_MODULE_REGISTRY
 
 RCT_EXPORT_MODULE(PowerAuth);
 
-- (void) pluginInitialize
-{
-    PAJS_OBJECT_REGISTER
-}
-
-- (void) initialize
+- (void) PAJS_INITIALIZE_METHOD
 {
     PAJS_OBJECT_REGISTER
 }
@@ -62,23 +57,22 @@ RCT_EXPORT_MODULE(PowerAuth);
 
 #pragma mark - Native methods bridged to JS
 
-PAJS_METHOD_START(
-  isConfigured,
-  PAJS_ARGUMENT(0, instanceId, NSString*)
-)
+PAJS_METHOD_START(isConfigured,
+                  PAJS_ARGUMENT(0, instanceId, NSString*))
+{
     if ([self validateInstanceId:instanceId reject:reject]) {
         resolve(@([_objectRegister findObjectWithId:instanceId expectedClass:[PowerAuthSDK class]] != nil));
     }
+}
 PAJS_METHOD_END
 
-PAJS_METHOD_START(
-  configure,
-  PAJS_ARGUMENT(0, instanceId, NSString*)
-  PAJS_ARGUMENT(1, configuration, NSDictionary*)
-  PAJS_ARGUMENT(2, clientConfiguration, NSDictionary*)
-  PAJS_ARGUMENT(3, biometryConfiguration, NSDictionary*)
-  PAJS_ARGUMENT(4, keychainConfiguration, NSDictionary*)
-)
+PAJS_METHOD_START(configure,
+                  PAJS_ARGUMENT(0, instanceId, NSString*)
+                  PAJS_ARGUMENT(1, configuration, NSDictionary*)
+                  PAJS_ARGUMENT(2, clientConfiguration, NSDictionary*)
+                  PAJS_ARGUMENT(3, biometryConfiguration, NSDictionary*)
+                  PAJS_ARGUMENT(4, keychainConfiguration, NSDictionary*))
+{
     if (![self validateInstanceId:instanceId reject:reject]) {
         return;
     }
@@ -95,7 +89,7 @@ PAJS_METHOD_START(
         reject(EC_WRONG_PARAMETER, @"Provided configuration is invalid", nil);
         return;
     }
-
+    
     // HTTP client config
     PowerAuthClientConfiguration * clientConfig = [[PowerAuthClientConfiguration sharedInstance] copy];
     clientConfig.defaultRequestTimeout = CAST_TO(clientConfiguration[@"connectionTimeout"], NSNumber).doubleValue;
@@ -137,7 +131,7 @@ PAJS_METHOD_START(
     // Biometry
     keychainConfig.linkBiometricItemsToCurrentSet = CAST_TO(biometryConfiguration[@"linkItemsToCurrentSet"], NSNumber).boolValue;
     keychainConfig.allowBiometricAuthenticationFallbackToDevicePasscode = CAST_TO(biometryConfiguration[@"fallbackToDevicePasscode"], NSNumber).boolValue;
-
+    
     // Now register the instance in the thread safe manner.
     BOOL registered = [_objectRegister registerObjectWithId:instanceId tag:instanceId policies:@[RP_MANUAL()] objectFactory:^id {
         return [[PowerAuthSDK alloc] initWithConfiguration:config keychainConfiguration:keychainConfig clientConfiguration:clientConfig];
@@ -150,130 +144,127 @@ PAJS_METHOD_START(
         // Instance is already configured
         reject(EC_REACT_NATIVE_ERROR, @"PowerAuth object with this instanceId is already configured.", nil);
     }
+}
 PAJS_METHOD_END
 
-PAJS_METHOD_START(
-  deconfigure,
-  PAJS_ARGUMENT(0, instanceId, NSString*)
-)
+PAJS_METHOD_START(deconfigure,
+                  PAJS_ARGUMENT(0, instanceId, NSString*))
+{
     if ([self validateInstanceId:instanceId reject:reject]) {
         [_objectRegister removeAllObjectsWithTag:instanceId];
         resolve(@YES);
     }
+}
 PAJS_METHOD_END
 
-PAJS_METHOD_START(
-  hasValidActivation,
-  PAJS_ARGUMENT(0, instanceId, NSString*)
-)
+PAJS_METHOD_START(hasValidActivation,
+                  PAJS_ARGUMENT(0, instanceId, NSString*))
+{
     PA_BLOCK_START
     resolve(@([powerAuth hasValidActivation]));
     PA_BLOCK_END
-
+}
 PAJS_METHOD_END
 
-PAJS_METHOD_START(
-  canStartActivation,
-  PAJS_ARGUMENT(0, instanceId, NSString*)
-)
+PAJS_METHOD_START(canStartActivation,
+                  PAJS_ARGUMENT(0, instanceId, NSString*))
+{
     PA_BLOCK_START
     resolve(@([powerAuth canStartActivation]));
     PA_BLOCK_END
+}
 PAJS_METHOD_END
 
-PAJS_METHOD_START(
-  hasPendingActivation,
-  PAJS_ARGUMENT(0, instanceId, NSString*)
-)
+PAJS_METHOD_START(hasPendingActivation,
+                  PAJS_ARGUMENT(0, instanceId, NSString*))
+{
     PA_BLOCK_START
     resolve(@([powerAuth hasPendingActivation]));
     PA_BLOCK_END
-
+}
 PAJS_METHOD_END
 
-//RCT_REMAP_METHOD(fetchActivationStatus,
-//                 instanceId:(NSString*)instanceId
-//                 fetchActivationStatusResolve:(RCTPromiseResolveBlock)resolve
-//                 fetchActivationStatusReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    [powerAuth getActivationStatusWithCallback:^(PowerAuthActivationStatus * _Nullable status, NSError * _Nullable error) {
-//        if (error == nil) {
-//            NSDictionary *response = @{
-//                @"state": [self getStatusCode:status.state],
-//                @"failCount": [[NSNumber alloc] initWithUnsignedInt:status.failCount],
-//                @"maxFailCount": [[NSNumber alloc] initWithUnsignedInt:status.maxFailCount],
-//                @"remainingAttempts": [[NSNumber alloc] initWithUnsignedInt:status.remainingAttempts],
-//                @"customObject": status.customObject ? [RCTConvert NSDictionary:status.customObject] : [NSNull null]
-//            };
-//            resolve(response);
-//        } else {
-//            ProcessError(error, reject);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(createActivation,
-//                 instanceId:(NSString*)instanceId
-//                 activation:(NSDictionary*)activation
-//                 createActivationResolver:(RCTPromiseResolveBlock)resolve
-//                 createActivationRejecter:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthActivation * paActivation;
-//    
-//    NSString* name = activation[@"activationName"];
-//    NSString* activationCode = activation[@"activationCode"];
-//    NSString* recoveryCode = activation[@"recoveryCode"];
-//    NSString* recoveryPuk = activation[@"recoveryPuk"];
-//    NSDictionary* identityAttributes = activation[@"identityAttributes"];
-//    NSString* extras = activation[@"extras"];
-//    NSDictionary* customAttributes = activation[@"customAttributes"];
-//    NSString* additionalActivationOtp = activation[@"additionalActivationOtp"];
-//    
-//    if (activationCode) {
-//        paActivation = [PowerAuthActivation activationWithActivationCode:activationCode name:name error:nil];
-//    } else if (recoveryCode && recoveryPuk) {
-//        paActivation = [PowerAuthActivation activationWithRecoveryCode:recoveryCode recoveryPuk:recoveryPuk name:name error:nil];
-//    } else if (identityAttributes) {
-//        paActivation = [PowerAuthActivation activationWithIdentityAttributes:identityAttributes name:name error:nil];
-//    }
-//    
-//    if (!paActivation) {
-//        reject(EC_INVALID_ACTIVATION_OBJECT, @"Activation object is invalid.", nil);
-//        return;
-//    }
-//    
-//    if (extras) {
-//        [paActivation withExtras:extras];
-//    }
-//    
-//    if (customAttributes) {
-//        [paActivation withCustomAttributes:customAttributes];
-//    }
-//    
-//    if (additionalActivationOtp) {
-//        [paActivation withAdditionalActivationOtp:additionalActivationOtp];
-//    }
-//    
-//    [powerAuth createActivation:paActivation callback:^(PowerAuthActivationResult * _Nullable result, NSError * _Nullable error) {
-//        if (error == nil) {
-//            resolve(PatchNull(@{
-//                @"activationFingerprint": result.activationFingerprint,
-//                @"activationRecovery": result.activationRecovery ? @{
-//                    @"recoveryCode": result.activationRecovery.recoveryCode,
-//                    @"puk": result.activationRecovery.puk
-//                } : [NSNull null],
-//                @"customAttributes": result.customAttributes ? result.customAttributes : [NSNull null]
-//            }));
-//        } else {
-//            ProcessError(error, reject);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
+PAJS_METHOD_START(fetchActivationStatus,
+                  PAJS_ARGUMENT(0, instanceId, NSString*))
+{
+    PA_BLOCK_START
+    [powerAuth getActivationStatusWithCallback:^(PowerAuthActivationStatus * _Nullable status, NSError * _Nullable error) {
+        if (error == nil) {
+            NSDictionary *response = @{
+                @"state": [self getStatusCode:status.state],
+                @"failCount": [[NSNumber alloc] initWithUnsignedInt:status.failCount],
+                @"maxFailCount": [[NSNumber alloc] initWithUnsignedInt:status.maxFailCount],
+                @"remainingAttempts": [[NSNumber alloc] initWithUnsignedInt:status.remainingAttempts],
+                @"customObject": status.customObject ? [RCTConvert NSDictionary:status.customObject] : [NSNull null]
+            };
+            resolve(response);
+        } else {
+            ProcessError(error, reject);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(createActivation,
+                  PAJS_ARGUMENT(0, instanceId, NSString*)
+                  PAJS_ARGUMENT(1, activation, NSDictionary*))
+{
+    PA_BLOCK_START
+    PowerAuthActivation * paActivation;
+    
+    NSString* name = activation[@"activationName"];
+    NSString* activationCode = activation[@"activationCode"];
+    NSString* recoveryCode = activation[@"recoveryCode"];
+    NSString* recoveryPuk = activation[@"recoveryPuk"];
+    NSDictionary* identityAttributes = activation[@"identityAttributes"];
+    NSString* extras = activation[@"extras"];
+    NSDictionary* customAttributes = activation[@"customAttributes"];
+    NSString* additionalActivationOtp = activation[@"additionalActivationOtp"];
+    
+    if (activationCode) {
+        paActivation = [PowerAuthActivation activationWithActivationCode:activationCode name:name error:nil];
+    } else if (recoveryCode && recoveryPuk) {
+        paActivation = [PowerAuthActivation activationWithRecoveryCode:recoveryCode recoveryPuk:recoveryPuk name:name error:nil];
+    } else if (identityAttributes) {
+        paActivation = [PowerAuthActivation activationWithIdentityAttributes:identityAttributes name:name error:nil];
+    }
+    
+    if (!paActivation) {
+        reject(EC_INVALID_ACTIVATION_OBJECT, @"Activation object is invalid.", nil);
+        return;
+    }
+    
+    if (extras) {
+        [paActivation withExtras:extras];
+    }
+    
+    if (customAttributes) {
+        [paActivation withCustomAttributes:customAttributes];
+    }
+    
+    if (additionalActivationOtp) {
+        [paActivation withAdditionalActivationOtp:additionalActivationOtp];
+    }
+    
+    [powerAuth createActivation:paActivation callback:^(PowerAuthActivationResult * _Nullable result, NSError * _Nullable error) {
+        if (error == nil) {
+            resolve(PatchNull(@{
+                @"activationFingerprint": result.activationFingerprint,
+                @"activationRecovery": result.activationRecovery ? @{
+                    @"recoveryCode": result.activationRecovery.recoveryCode,
+                    @"puk": result.activationRecovery.puk
+                } : [NSNull null],
+                @"customAttributes": result.customAttributes ? result.customAttributes : [NSNull null]
+            }));
+        } else {
+            ProcessError(error, reject);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
 //RCT_REMAP_METHOD(commitActivation,
 //                 instanceId:(NSString*)instanceId
 //                 authentication:(NSDictionary*)authentication

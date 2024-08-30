@@ -23,7 +23,6 @@ export class NativePowerAuth implements NativePowerAuthIfc {
     private readonly pluginName = "PowerAuthModule";
 
     callNative<T>(name: string, ...args): Promise<T> {
-        console.log("callNative");
         return new Promise<T>(
             (resolve, reject) => {
                 cordova.exec(

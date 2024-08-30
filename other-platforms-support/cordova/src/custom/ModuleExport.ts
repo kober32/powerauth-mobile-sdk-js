@@ -17,5 +17,38 @@
 // @ts-nocheck
 
 module.exports = {
-    PowerAuth: PowerAuth, 
+    PowerAuth: PowerAuth,
+    PowerAuthActivation: PowerAuthActivation
 }
+
+// export * from './PowerAuth';
+// export * from './PowerAuthActivationCodeUtil';
+// export * from './PowerAuthTokenStore';
+// export * from './PowerAuthPassphraseMeter';
+
+// // Model objects
+
+// export * from './model/PowerAuthActivation';
+// export * from './model/PowerAuthActivationState';
+// export * from './model/PowerAuthActivationStatus';
+// export * from './model/PowerAuthAuthentication';
+// export * from './model/PowerAuthAuthorizationHttpHeader';
+// export * from './model/PowerAuthEncryptionHttpHeader';
+// export * from './model/PowerAuthBiometryConfiguration';
+// export * from './model/PowerAuthBiometryInfo';
+// export * from './model/PowerAuthClientConfiguration';
+// export * from './model/PowerAuthConfiguration';
+// export * from './model/PowerAuthConfirmRecoveryCodeDataResult';
+// export * from './model/PowerAuthCreateActivationResult';
+// export * from './model/PowerAuthError';
+// export * from './model/PowerAuthKeychainConfiguration';
+// export * from './model/PowerAuthRecoveryActivationData';
+// export * from './model/PowerAuthPassword';
+// export * from './model/PowerAuthEncryptor';
+// export * from './model/PowerAuthDataFormat';
+// export * from './model/BaseNativeObject';
+
+// // Debug features
+
+// export * from './debug/PowerAuthDebug';
+// export * from './debug/NativeObjectRegister';
