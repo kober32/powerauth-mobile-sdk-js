@@ -57,11 +57,13 @@ RCT_REMAP_METHOD(name,\
 #define PAJS_INITIALIZE_METHOD initialize
 #define PAJS_INVALIDATE_METHOD invalidate
 
-#elif PAJS_CORDOVA
+#elif defined PAJS_CORDOVA
 
 #pragma mark - CORDOVA
 
 #import <Cordova/CDVPlugin.h>
+#import <Cordova/CDVAppDelegate.h>
+#import <Cordova/CDVViewController.h>
 #import "RCTConvert.h"
 
 typedef void (^RCTPromiseRejectBlock)(NSString *code, NSString *message, NSError *error);
@@ -69,6 +71,7 @@ typedef void (^RCTPromiseResolveBlock)(id result);
 #define RCT_EXPORT_MODULE(name)
 
 #define PAJS_MODULE(name) @interface name : CDVPlugin
+#define PAJS_MODULE_BASIC(name) PAJS_MODULE(name)
 #define PAJS_MODULE_INVALIDATING
 
 #define PAJS_METHOD_START(name, parameters) \

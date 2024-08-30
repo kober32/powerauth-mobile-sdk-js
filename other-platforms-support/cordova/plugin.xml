@@ -32,8 +32,8 @@
         <source-file src="ios/PowerAuth/Errors.m" />
         <header-file src="ios/PowerAuth/PowerAuthData.h" />
         <source-file src="ios/PowerAuth/PowerAuthData.m" />
-        <!-- <header-file src="ios/PowerAuth/PowerAuthEncryptorModule.h" /> -->
-        <!-- <source-file src="ios/PowerAuth/PowerAuthEncryptorModule.m" /> -->
+        <header-file src="ios/PowerAuth/PowerAuthEncryptorModule.h" />
+        <source-file src="ios/PowerAuth/PowerAuthEncryptorModule.m" />
         <header-file src="ios/PowerAuth/PowerAuthModule.h" />
         <source-file src="ios/PowerAuth/PowerAuthModule.m" />
         <source-file src="ios/PowerAuth/PowerAuthObjectRegister+JS.m" />
