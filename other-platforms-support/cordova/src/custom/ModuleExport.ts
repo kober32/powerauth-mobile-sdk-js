@@ -18,7 +18,8 @@
 
 module.exports = {
     PowerAuth: PowerAuth,
-    PowerAuthActivation: PowerAuthActivation
+    PowerAuthActivation: PowerAuthActivation,
+    PowerAuthAuthentication: PowerAuthAuthentication
 }
 
 // export * from './PowerAuth';

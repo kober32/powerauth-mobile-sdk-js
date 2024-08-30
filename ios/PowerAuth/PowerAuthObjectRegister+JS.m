@@ -49,7 +49,7 @@
 }
 
 PAJS_METHOD_START(isValidNativeObject,
-                  PAJS_ARGUMENT(0, objectId, id))
+                  PAJS_ARGUMENT(objectId, id))
 {
     resolve(@([self containsObjectWithId:objectId]));
 }
@@ -168,15 +168,15 @@ RCT_EXPORT_METHOD(debugCommand:(NSString*)command
 // MARK: - JS RELEASE
 
 PAJS_METHOD_START(debugDump,
-                  PAJS_ARGUMENT(0, instanceId, NSString*))
+                  PAJS_ARGUMENT(instanceId, NSString*))
 {
     resolve(nil);
 }
 PAJS_METHOD_END
 
 PAJS_METHOD_START(debugCommand,
-                  PAJS_ARGUMENT(0, command, NSString*)
-                  PAJS_ARGUMENT(1, options, NSDictionary*))
+                  PAJS_ARGUMENT(command, NSString*)
+                  PAJS_ARGUMENT(options, NSDictionary*))
 {
     resolve(nil);
 }

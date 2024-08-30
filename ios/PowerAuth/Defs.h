@@ -64,11 +64,10 @@ typedef void (^RCTPromiseResolveBlock)(id result);
 
 #define PAJS_MODULE(name) @interface name : CDVPlugin
 
-#define PAJS_ARGUMENT(idx, name, type) type name = [cmd argumentAtIndex:idx];
-
 #define PAJS_METHOD_START(name, parameters) \
 - (void)name:(CDVInvokedUrlCommand*)cmd \
 { \
+    int paramIdx = 0; \
     parameters \
     RCTPromiseRejectBlock reject = ^(NSString *code, NSString *message, NSError *error) { \
         [[self commandDelegate] sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:message] callbackId: cmd.callbackId]; \
@@ -81,6 +80,8 @@ NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{ @"result": result 
     };
 
 #define PAJS_METHOD_END }
+
+#define PAJS_ARGUMENT(name, type) type name = [cmd argumentAtIndex:paramIdx++];
 
 #define PAJS_MODULE_REGISTRY
 

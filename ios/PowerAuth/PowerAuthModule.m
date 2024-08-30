@@ -58,7 +58,7 @@ RCT_EXPORT_MODULE(PowerAuth);
 #pragma mark - Native methods bridged to JS
 
 PAJS_METHOD_START(isConfigured,
-                  PAJS_ARGUMENT(0, instanceId, NSString*))
+                  PAJS_ARGUMENT(instanceId, NSString*))
 {
     if ([self validateInstanceId:instanceId reject:reject]) {
         resolve(@([_objectRegister findObjectWithId:instanceId expectedClass:[PowerAuthSDK class]] != nil));
@@ -67,11 +67,11 @@ PAJS_METHOD_START(isConfigured,
 PAJS_METHOD_END
 
 PAJS_METHOD_START(configure,
-                  PAJS_ARGUMENT(0, instanceId, NSString*)
-                  PAJS_ARGUMENT(1, configuration, NSDictionary*)
-                  PAJS_ARGUMENT(2, clientConfiguration, NSDictionary*)
-                  PAJS_ARGUMENT(3, biometryConfiguration, NSDictionary*)
-                  PAJS_ARGUMENT(4, keychainConfiguration, NSDictionary*))
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(configuration, NSDictionary*)
+                  PAJS_ARGUMENT(clientConfiguration, NSDictionary*)
+                  PAJS_ARGUMENT(biometryConfiguration, NSDictionary*)
+                  PAJS_ARGUMENT(keychainConfiguration, NSDictionary*))
 {
     if (![self validateInstanceId:instanceId reject:reject]) {
         return;
@@ -148,7 +148,7 @@ PAJS_METHOD_START(configure,
 PAJS_METHOD_END
 
 PAJS_METHOD_START(deconfigure,
-                  PAJS_ARGUMENT(0, instanceId, NSString*))
+                  PAJS_ARGUMENT(instanceId, NSString*))
 {
     if ([self validateInstanceId:instanceId reject:reject]) {
         [_objectRegister removeAllObjectsWithTag:instanceId];
@@ -158,7 +158,7 @@ PAJS_METHOD_START(deconfigure,
 PAJS_METHOD_END
 
 PAJS_METHOD_START(hasValidActivation,
-                  PAJS_ARGUMENT(0, instanceId, NSString*))
+                  PAJS_ARGUMENT(instanceId, NSString*))
 {
     PA_BLOCK_START
     resolve(@([powerAuth hasValidActivation]));
@@ -167,7 +167,7 @@ PAJS_METHOD_START(hasValidActivation,
 PAJS_METHOD_END
 
 PAJS_METHOD_START(canStartActivation,
-                  PAJS_ARGUMENT(0, instanceId, NSString*))
+                  PAJS_ARGUMENT(instanceId, NSString*))
 {
     PA_BLOCK_START
     resolve(@([powerAuth canStartActivation]));
@@ -176,7 +176,7 @@ PAJS_METHOD_START(canStartActivation,
 PAJS_METHOD_END
 
 PAJS_METHOD_START(hasPendingActivation,
-                  PAJS_ARGUMENT(0, instanceId, NSString*))
+                  PAJS_ARGUMENT(instanceId, NSString*))
 {
     PA_BLOCK_START
     resolve(@([powerAuth hasPendingActivation]));
@@ -185,7 +185,7 @@ PAJS_METHOD_START(hasPendingActivation,
 PAJS_METHOD_END
 
 PAJS_METHOD_START(fetchActivationStatus,
-                  PAJS_ARGUMENT(0, instanceId, NSString*))
+                  PAJS_ARGUMENT(instanceId, NSString*))
 {
     PA_BLOCK_START
     [powerAuth getActivationStatusWithCallback:^(PowerAuthActivationStatus * _Nullable status, NSError * _Nullable error) {
@@ -207,8 +207,8 @@ PAJS_METHOD_START(fetchActivationStatus,
 PAJS_METHOD_END
 
 PAJS_METHOD_START(createActivation,
-                  PAJS_ARGUMENT(0, instanceId, NSString*)
-                  PAJS_ARGUMENT(1, activation, NSDictionary*))
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(activation, NSDictionary*))
 {
     PA_BLOCK_START
     PowerAuthActivation * paActivation;
@@ -265,29 +265,28 @@ PAJS_METHOD_START(createActivation,
 }
 PAJS_METHOD_END
 
-//RCT_REMAP_METHOD(commitActivation,
-//                 instanceId:(NSString*)instanceId
-//                 authentication:(NSDictionary*)authentication
-//                 commitActivationResolver:(RCTPromiseResolveBlock)resolve
-//                 commitActivationRejecter:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authentication reject:reject forCommit:YES];
-//    if (!auth) {
-//        return;
-//    }
-//    
-//    NSError* error = nil;
-//    bool success = [powerAuth commitActivationWithAuthentication:auth error:&error];
-//    
-//    if (success) {
-//        resolve(@YES);
-//    } else {
-//        ProcessError(error, reject);
-//    }
-//    PA_BLOCK_END
-//}
-//
+PAJS_METHOD_START(commitActivation,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authentication, NSDictionary*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authentication reject:reject forCommit:YES];
+    if (!auth) {
+        return;
+    }
+    
+    NSError* error = nil;
+    bool success = [powerAuth commitActivationWithAuthentication:auth error:&error];
+    
+    if (success) {
+        resolve(@YES);
+    } else {
+        ProcessError(error, reject);
+    }
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
 //RCT_REMAP_METHOD(activationIdentifier,
 //                 instanceId:(NSString*)instanceId
 //                 activationIdentifierResolve:(RCTPromiseResolveBlock)resolve
