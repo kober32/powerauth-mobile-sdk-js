@@ -18,7 +18,7 @@
 #import "PowerAuthData.h"
 #import "PowerAuthObjectRegister.h"
 #import "Constants.h"
-#import "Defs.h"
+#import "PAJS.h"
 #import <Cordova/CDVAppDelegate.h>
 #import <Cordova/CDVViewController.h>
 

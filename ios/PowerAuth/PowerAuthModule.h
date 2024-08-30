@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import "Defs.h"
+#import "PAJS.h"
 
 PAJS_MODULE(PowerAuthModule)
 

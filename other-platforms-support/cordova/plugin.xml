@@ -48,7 +48,7 @@
         <!-- <source-file src="pin_tester.c" /> -->
         <!-- <header-file src="ios/PowerAuth/pin_tester.h" /> -->
         <!-- <header-file src="ios/PowerAuth/wpm_types.h" /> -->
-        <header-file src="ios/PowerAuth/Defs.h" />
+        <header-file src="ios/PowerAuth/PAJS.h" />
 
         <header-file src="ios/PowerAuth/RCTDefines.h" />
         <header-file src="ios/PowerAuth/RCTConvert.h" />

@@ -16,7 +16,7 @@
 
 #import "PowerAuthObjectRegister.h"
 #import "PowerAuthData.h"
-#import "Defs.h"
+#import "PAJS.h"
 // TODO: solve
 //#import "PowerAuthEncryptorModule.h"
 //#import <React/RCTConvert.h>

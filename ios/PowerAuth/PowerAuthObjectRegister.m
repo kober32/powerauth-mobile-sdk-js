@@ -16,7 +16,7 @@
 
 #import "PowerAuthObjectRegister.h"
 #import "Constants.h"
-#import "Defs.h"
+#import "PAJS.h"
 
 // MARK: - Release policies -
 
