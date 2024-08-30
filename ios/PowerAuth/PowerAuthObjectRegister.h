@@ -22,7 +22,7 @@
  The object is identified by an unique identifier created at the time of registration
  or by application provided identifier.
  */
-PAJS_MODULE(PowerAuthObjectRegister)
+PAJS_MODULE_BASIC(PowerAuthObjectRegister)
 
 /**
  Register object and return auto generated object identifier.

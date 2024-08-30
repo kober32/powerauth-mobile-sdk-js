@@ -17,15 +17,22 @@
 #import "PowerAuthObjectRegister.h"
 #import "PowerAuthData.h"
 #import "PAJS.h"
-// TODO: solve
-//#import "PowerAuthEncryptorModule.h"
+#import "PowerAuthEncryptorModule.h"
 
 @import PowerAuthCore;
+
+/*
+ This class category exports several debug methods to JavaScript.
+ The 'debug' methods are available only if library is compiled in DEBUG configuration.
+ */
+@interface PowerAuthObjectRegister (JS) PAJS_MODULE_INVALIDATING
+@end
 
 @implementation PowerAuthObjectRegister (JS)
 
 // MARK: - JS interface
 
+// TODO: fixme
 - (void) PAJS_INVALIDATE_METHOD
 {
     // This is invoked by RN bridge when devmode reload is requested.
@@ -45,22 +52,20 @@ PAJS_METHOD_START(isValidNativeObject,
 }
 PAJS_METHOD_END
 
-// TODO: temporary reverted if
-#if !DEBUG
+#if DEBUG
 
 // MARK: - JS DEBUG
 
-RCT_EXPORT_METHOD(debugDump:(id)instanceId
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+PAJS_METHOD_START(debugDump,
+                  PAJS_ARGUMENT(instanceId, id))
 {
     resolve([self debugDumpObjectsWithTag:[RCTConvert NSString:instanceId]]);
 }
+PAJS_METHOD_END
 
-RCT_EXPORT_METHOD(debugCommand:(NSString*)command
-                  options:(NSDictionary*)options
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+PAJS_METHOD_START(debugCommand,
+                  PAJS_ARGUMENT(command, NSString*)
+                  PAJS_ARGUMENT(options, NSDictionary*))
 {
     NSString * objectId     = [RCTConvert NSString:options[@"objectId"]];
     NSString * objectTag    = [RCTConvert NSString:options[@"objectTag"]];
@@ -152,6 +157,7 @@ RCT_EXPORT_METHOD(debugCommand:(NSString*)command
     }
     reject(EC_WRONG_PARAMETER, [NSString stringWithFormat:@"Wrong parameter for cmd %@, %@", command, options], nil);
 }
+PAJS_METHOD_END
 
 #else
 

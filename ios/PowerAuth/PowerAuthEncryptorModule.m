@@ -18,7 +18,7 @@
 #import "PowerAuthObjectRegister.h"
 #import "Constants.h"
 #import "Utilities.h"
-#import <React/RCTConvert.h>
+#import "PAJS.h"
 
 #import <PowerAuth2/PowerAuthSDK.h>
 @import PowerAuthCore;
@@ -32,14 +32,14 @@
 
 // MARK: - ReactNative bridge
 
-@synthesize moduleRegistry = _moduleRegistry;
+PAJS_MODULE_REGISTRY
 
 RCT_EXPORT_MODULE(PowerAuthEncryptor);
 
-- (void) initialize
+- (void) PAJS_INITIALIZE_METHOD
 {
     // RCTInitializing protocol allows us to get module dependencies before the object is used from JS.
-    _objectRegister = [_moduleRegistry moduleForName:"PowerAuthObjectRegister"];
+    PAJS_OBJECT_REGISTER
 }
 
 + (BOOL) requiresMainQueueSetup

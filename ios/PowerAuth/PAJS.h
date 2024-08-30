@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Wultra s.r.o.
+ * Copyright 2024 Wultra s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 #ifndef PAJS_DEFS
 #define PAJS_DEFS
 
+#import "PAJSPlatform.h"
+
 /**
  THIS FILE CONTAINS MACROS THAT ABSTRACT NATIVE BRIDGE CODE SO WE ARE
  ABLE TO USE SINGLE FILE ON BOTH CORDOVA AND REACT-NATIVE
@@ -25,14 +27,16 @@
 
 #pragma mark - REACT NATIVE
 
-#ifdef RCT_REMAP_METHOD
+#ifdef PAJS_REACT
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTInitializing.h>
 #import <React/RCTConvert.h>
 #import <React/RCTInvalidating.h>
 
-#define PAJS_MODULE(name) @interface name : NSObject<RCTBridgeModule, RCTInitializing, RCTInvalidating>
+#define PAJS_MODULE(name) @interface name : NSObject<RCTBridgeModule, RCTInitializing>
+#define PAJS_MODULE_BASIC(name) @interface name : NSObject<RCTBridgeModule>
+#define PAJS_MODULE_INVALIDATING <RCTInvalidating>
 
 #define PAJS_MODULE_REGISTRY @synthesize moduleRegistry = _moduleRegistry;
 
@@ -40,32 +44,32 @@
 
 #define PAJS_NULLABLE_ARGUMENT nullable
 #define PAJS_NONNULL_ARGUMENT nonnull
-#define PAJS_ARGUMENT(idx, name, type) name:(type)name \
+#define PAJS_ARGUMENT(name, type) name:(type)name \
 
 #define PAJS_METHOD_START(name, parameters) \
 RCT_REMAP_METHOD(name,\
                  parameters \
                  resolve:(RCTPromiseResolveBlock)resolve \
-                 reject:(RCTPromiseRejectBlock)reject) \
-{
+                 name##reject:(RCTPromiseRejectBlock)reject)
 
-#define PAJS_METHOD_END }
+#define PAJS_METHOD_END
 
 #define PAJS_INITIALIZE_METHOD initialize
 #define PAJS_INVALIDATE_METHOD invalidate
-#else
+
+#elif PAJS_CORDOVA
 
 #pragma mark - CORDOVA
 
 #import <Cordova/CDVPlugin.h>
 #import "RCTConvert.h"
 
-// TODO: remove me - to be able to use React interfaces
 typedef void (^RCTPromiseRejectBlock)(NSString *code, NSString *message, NSError *error);
 typedef void (^RCTPromiseResolveBlock)(id result);
 #define RCT_EXPORT_MODULE(name)
 
 #define PAJS_MODULE(name) @interface name : CDVPlugin
+#define PAJS_MODULE_INVALIDATING
 
 #define PAJS_METHOD_START(name, parameters) \
 - (void)name:(CDVInvokedUrlCommand*)cmd \
@@ -97,6 +101,6 @@ NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{ @"result": result 
 CDVViewController *cdvVc = [cdvAd viewController]; \
 _objectRegister = [[cdvVc pluginObjects] objectForKey:@"PowerAuthObjectRegister"];
 
-#endif
+#endif // PAJS_CORDOVA
 
-#endif
+#endif // PAJS_DEFS
