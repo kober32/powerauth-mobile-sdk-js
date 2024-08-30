@@ -16,9 +16,8 @@
 
 #import "Errors.h"
 #import "PowerAuthObjectRegister.h"
+#import "PAJS.h"
 
-// TODO: fix
-//#import <React/RCTConvert.h>
 #import <PowerAuth2/PowerAuthSDK.h>
 @import PowerAuthCore;
 
@@ -50,9 +49,7 @@ NSString * GetNSStringValueFromDict(NSDictionary * dict, NSString * key)
     if (value == nil || value == [NSNull null]) {
         return nil;
     }
-    return value;
-    // TODO: Fix
-    //return [RCTConvert NSString:value];
+    return [RCTConvert NSString:value];
 }
 
 id GetValueAtPathFromDict(NSDictionary * dict, NSString * path, Class expectedClass)
@@ -103,9 +100,7 @@ NSData * DecodeNSDataValue(NSString * dataValue, DataFormat dataFormat, RCTPromi
     NSData * result;
     if (dataValue) {
         if (dataFormat == DF_UTF8) {
-            // TODO: fixme
-            //result = [RCTConvert NSData:dataValue];
-            result = dataValue;
+            result = [RCTConvert NSData:dataValue];
             if (!result && reject) {
                 reject(EC_WRONG_PARAMETER, @"Failed to convert string into UTF8 encoded data", nil);
             }

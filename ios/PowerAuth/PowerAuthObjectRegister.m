@@ -81,17 +81,16 @@ NSNumber * RP_EXPIRE(NSUInteger timeIntervalMs) {
 #if DEBUG
 NSUInteger RP_TIME_INTERVAL(id _Nullable anyValue, NSUInteger defaultValue)
 {
-    // TODO: solve
-//    NSNumber * time = [RCTConvert NSNumber:anyValue];
-//    if (time) {
-//        NSUInteger timeValue = [time unsignedIntegerValue];
-//        // Ignore zero result and make sure that time doesn't exceed 5 minutes
-//        if (timeValue) {
-//            return MIN(timeValue, defaultValue);
-//        } else {
-//            return defaultValue;
-//        }
-//    }
+    NSNumber * time = [RCTConvert NSNumber:anyValue];
+    if (time) {
+        NSUInteger timeValue = [time unsignedIntegerValue];
+        // Ignore zero result and make sure that time doesn't exceed 5 minutes
+        if (timeValue) {
+            return MIN(timeValue, defaultValue);
+        } else {
+            return defaultValue;
+        }
+    }
     return defaultValue;
 }
 #endif
@@ -294,11 +293,10 @@ RCT_EXPORT_MODULE(PowerAuthObjectRegister);
 /// - Returns: Translated key to object register.
 - (NSString*) translateObjectId:(id)objectId
 {
-    // TODO: solve
-//    NSString * stringId = [RCTConvert NSString:objectId];
-//    if (stringId.length == 0) {
-//        return nil;
-//    }
+    NSString * stringId = [RCTConvert NSString:objectId];
+    if (stringId.length == 0) {
+        return nil;
+    }
     return objectId;
 }
 

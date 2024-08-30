@@ -19,7 +19,6 @@
 #import "PAJS.h"
 // TODO: solve
 //#import "PowerAuthEncryptorModule.h"
-//#import <React/RCTConvert.h>
 //#import <React/RCTInvalidating.h>
 
 @import PowerAuthCore;

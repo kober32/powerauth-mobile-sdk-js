@@ -1019,8 +1019,7 @@ PAJS_METHOD_END
                                                             reject:(RCTPromiseRejectBlock)reject
                                                          forCommit:(BOOL)commit
 {
-    // TODO: fix
-    BOOL useBiometry = @YES;// [RCTConvert BOOL:dict[@"isBiometry"]];
+    BOOL useBiometry = [RCTConvert BOOL:dict[@"isBiometry"]];
     id userPassword = dict[@"password"];
     if (commit) {
         // Activation commit
