@@ -30,13 +30,16 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTInitializing.h>
 #import <React/RCTConvert.h>
+#import <React/RCTInvalidating.h>
 
-#define PAJS_MODULE(name) @interface name : NSObject<RCTBridgeModule, RCTInitializing>
+#define PAJS_MODULE(name) @interface name : NSObject<RCTBridgeModule, RCTInitializing, RCTInvalidating>
 
 #define PAJS_MODULE_REGISTRY @synthesize moduleRegistry = _moduleRegistry;
 
 #define PAJS_OBJECT_REGISTER _objectRegister = [_moduleRegistry moduleForName:"PowerAuthObjectRegister"];
 
+#define PAJS_NULLABLE_ARGUMENT nullable
+#define PAJS_NONNULL_ARGUMENT nonnull
 #define PAJS_ARGUMENT(idx, name, type) name:(type)name \
 
 #define PAJS_METHOD_START(name, parameters) \
@@ -49,7 +52,7 @@ RCT_REMAP_METHOD(name,\
 #define PAJS_METHOD_END }
 
 #define PAJS_INITIALIZE_METHOD initialize
-
+#define PAJS_INVALIDATE_METHOD invalidate
 #else
 
 #pragma mark - CORDOVA
@@ -81,11 +84,14 @@ NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{ @"result": result 
 
 #define PAJS_METHOD_END }
 
+#define PAJS_NULLABLE_ARGUMENT
+#define PAJS_NONNULL_ARGUMENT
 #define PAJS_ARGUMENT(name, type) type name = [cmd argumentAtIndex:paramIdx++];
 
 #define PAJS_MODULE_REGISTRY
 
 #define PAJS_INITIALIZE_METHOD pluginInitialize
+#define PAJS_INVALIDATE_METHOD dispose
 
 #define PAJS_OBJECT_REGISTER CDVAppDelegate *cdvAd = [self appDelegate]; \
 CDVViewController *cdvVc = [cdvAd viewController]; \

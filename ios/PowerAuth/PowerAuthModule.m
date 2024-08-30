@@ -287,700 +287,664 @@ PAJS_METHOD_START(commitActivation,
 }
 PAJS_METHOD_END
 
-//RCT_REMAP_METHOD(activationIdentifier,
-//                 instanceId:(NSString*)instanceId
-//                 activationIdentifierResolve:(RCTPromiseResolveBlock)resolve
-//                 activationIdentifierReject:(RCTPromiseRejectBlock)reject)
-//{
-//    
-//    PA_BLOCK_START
-//    resolve([powerAuth activationIdentifier]);
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(activationFingerprint,
-//                 instanceId:(NSString*)instanceId
-//                 activationFingerprintResolve:(RCTPromiseResolveBlock)resolve
-//                 activationFingerprintReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    resolve([powerAuth activationFingerprint]);
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(removeActivationWithAuthentication,
-//                 instanceId:(NSString*)instanceId
-//                 authentication:(NSDictionary*)authDict
-//                 removeActivationResolver:(RCTPromiseResolveBlock)resolve
-//                 removeActivationRejecter:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    [powerAuth removeActivationWithAuthentication:auth callback:^(NSError * _Nullable error) {
-//        if (error) {
-//            ProcessError(error, reject);
-//        } else {
-//            resolve(@YES);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(removeActivationLocal,
-//                 instanceId:(NSString*)instanceId
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    [powerAuth removeActivationLocal];
-//    resolve(nil);
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(requestGetSignature,
-//                 instanceId:(NSString*)instanceId
-//                 requestGetSignatureWithAuthentication:(NSDictionary*)authDict
-//                 uriId:(NSString*)uriId
-//                 params:(nullable NSDictionary*)params
-//                 requestSignatureResolver:(RCTPromiseResolveBlock)resolve
-//                 requestSignatureReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    NSError* error = nil;
-//    PowerAuthAuthorizationHttpHeader* signature = [powerAuth requestGetSignatureWithAuthentication:auth uriId:uriId params:params error: &error];
-//    
-//    if (error) {
-//        ProcessError(error, reject);
-//    } else {
-//        NSDictionary *response = @{
-//            @"key": signature.key,
-//            @"value": signature.value
-//        };
-//        resolve(response);
-//    }
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(requestSignature,
-//                 instanceId:(NSString*)instanceId
-//                 requestSignatureWithAuthentication:(NSDictionary*)authDict
-//                 method:(nonnull NSString*)method
-//                 uriId:(nonnull NSString*)uriId
-//                 body:(nullable NSString*)body
-//                 requestSignatureResolver:(RCTPromiseResolveBlock)resolve
-//                 requestSignatureReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    NSError* error = nil;
-//    PowerAuthAuthorizationHttpHeader* signature = [powerAuth requestSignatureWithAuthentication:auth method:method uriId:uriId body:[RCTConvert NSData:body] error:&error];
-//    
-//    if (error) {
-//        ProcessError(error, reject);
-//    } else {
-//        NSDictionary *response = @{
-//            @"key": signature.key,
-//            @"value": signature.value
-//        };
-//        resolve(response);
-//    }
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(offlineSignature,
-//                 instanceId:(NSString*)instanceId
-//                 offlineSignatureWithAuthentication:(NSDictionary*)authDict
-//                 uriId:(NSString*)uriId
-//                 body:(nullable NSString*)body
-//                 nonce:(nonnull NSString*)nonce
-//                 offlineSignatureResolver:(RCTPromiseResolveBlock)resolve
-//                 offlineSignatureReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    NSError* error = nil;
-//    NSString* signature = [powerAuth offlineSignatureWithAuthentication:auth uriId:uriId body:[RCTConvert NSData:body] nonce:nonce error:&error];
-//    
-//    if (error) {
-//        ProcessError(error, reject);
-//    } else {
-//        resolve(signature);
-//    }
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(verifyServerSignedData,
-//                 instanceId:(NSString*)instanceId
-//                 data:(nonnull NSString*)data
-//                 signature:(nonnull NSString*)signature
-//                 masterKey:(BOOL)masterKey
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    BOOL result = [powerAuth verifyServerSignedData:[RCTConvert NSData:data] signature:signature masterKey:masterKey];
-//    resolve(@(result));
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(unsafeChangePassword,
-//                 instanceId:(NSString*)instanceId
-//                 oldPassword:(id)oldPassword
-//                 to:(id)newPassword
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthCorePassword * coreOldPassword = UsePassword(oldPassword, _objectRegister, reject);
-//    if (!coreOldPassword) {
-//        return;
-//    }
-//    PowerAuthCorePassword * newCorePassword = UsePassword(newPassword, _objectRegister, reject);
-//    if (!newCorePassword) {
-//        return;
-//    }
-//    BOOL result = [powerAuth unsafeChangeCorePasswordFrom:coreOldPassword to:newCorePassword];
-//    resolve(@(result));
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(changePassword,
-//                 instanceId:(NSString*)instanceId
-//                 oldPassword:(id)oldPassword
-//                 to:(id)newPassword
-//                 changePasswordResolve:(RCTPromiseResolveBlock)resolve
-//                 changePasswordReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthCorePassword * coreOldPassword = UsePassword(oldPassword, _objectRegister, reject);
-//    if (!coreOldPassword) {
-//        return;
-//    }
-//    PowerAuthCorePassword * newCorePassword = UsePassword(newPassword, _objectRegister, reject);
-//    if (!newCorePassword) {
-//        return;
-//    }
-//    [powerAuth changeCorePasswordFrom:coreOldPassword to:newCorePassword callback:^(NSError * error) {
-//        if (error) {
-//            ProcessError(error, reject);
-//        } else {
-//            resolve(@YES);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(addBiometryFactor,
-//                 instanceId:(NSString*)instanceId
-//                 password:(id)password
-//                 prompt:(NSDictionary*)foo
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    // Workaround for native SDK. We're expectint MISSING or PEDNING_ACTIVATION
-//    // but native SDK prioritize biometry-related error in this situation.
-//    if (![powerAuth hasValidActivation]) {
-//        reject(EC_MISSING_ACTIVATION, nil, nil);
-//        return;
-//    }
-//    if ([powerAuth hasPendingActivation]) {
-//        reject(EC_PENDING_ACTIVATION, nil, nil);
-//        return;
-//    }
-//    PowerAuthCorePassword * corePassword = UsePassword(password, _objectRegister, reject);
-//    if (!corePassword) {
-//        return;
-//    }
-//    [powerAuth addBiometryFactorWithCorePassword:corePassword callback:^(NSError * error) {
-//        if (error) {
-//            ProcessError(error, reject);
-//        } else {
-//            resolve(nil);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(hasBiometryFactor,
-//                 instanceId:(NSString*)instanceId
-//                 hasBiometryFactorResolve:(RCTPromiseResolveBlock)resolve
-//                 hasBiometryFactorReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    resolve(@([powerAuth hasBiometryFactor]));
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(removeBiometryFactor,
-//                 instanceId:(NSString*)instanceId
-//                 removeBiometryFactorResolve:(RCTPromiseResolveBlock)resolve
-//                 removeBiometryFactorReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    if ([powerAuth removeBiometryFactor]) {
-//        resolve(nil);
-//    } else {
-//        if (![powerAuth hasBiometryFactor]) {
-//            reject(EC_BIOMETRY_NOT_CONFIGURED, @"Biometry not configured in this PowerAuth instance", nil);
-//        } else {
-//            reject(EC_REACT_NATIVE_ERROR, @"Failed to remove biometry factor", nil);
-//        }
-//    }
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(getBiometryInfo,
-//                 instanceId:(NSString*)instanceId
-//                 getBiometryInfoResolve:(RCTPromiseResolveBlock)resolve
-//                 getBiometryInfoReject:(RCTPromiseRejectBlock)reject)
-//{
-//    NSString *biometryType;
-//    NSString *canAuthenticate;
-//    switch ([PowerAuthKeychain biometricAuthenticationInfo].biometryType) {
-//        case PowerAuthBiometricAuthenticationType_TouchID:
-//            biometryType = @"FINGERPRINT";
-//            break;
-//        case PowerAuthBiometricAuthenticationType_FaceID:
-//            biometryType = @"FACE";
-//            break;
-//        case PowerAuthBiometricAuthenticationType_None:
-//        default:
-//            biometryType = @"NONE";
-//            break;
-//    }
-//    switch ([PowerAuthKeychain biometricAuthenticationInfo].currentStatus) {
-//        case PowerAuthBiometricAuthenticationStatus_Available:
-//            canAuthenticate = @"OK";
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_NotEnrolled:
-//            canAuthenticate = @"NOT_ENROLLED";
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_NotAvailable:
-//            canAuthenticate = @"NOT_AVAILABLE";
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_NotSupported:
-//            canAuthenticate = @"NOT_SUPPORTED";
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_Lockout:
-//            canAuthenticate = @"LOCKOUT";
-//            break;
-//    }
-//    bool canUse = [PowerAuthKeychain canUseBiometricAuthentication];
-//    NSDictionary *response = @{
-//        @"isAvailable": canUse ? @YES : @NO,
-//        @"biometryType": biometryType,
-//        @"canAuthenticate": canAuthenticate
-//    };
-//    resolve(response);
-//}
-//
-//RCT_REMAP_METHOD(fetchEncryptionKey,
-//                 instanceId:(NSString*)instanceId
-//                 authentication:(NSDictionary*)authDict
-//                 index:(NSInteger)index
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    [powerAuth fetchEncryptionKey:auth index:index  callback:^(NSData * encryptionKey, NSError * error) {
-//        if (encryptionKey) {
-//            resolve([encryptionKey base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed]);
-//        } else {
-//            ProcessError(error, reject);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(signDataWithDevicePrivateKey,
-//                 instanceId:(NSString*)instanceId
-//                 authentication:(NSDictionary*)authDict
-//                 data:(NSString*)data
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    [powerAuth signDataWithDevicePrivateKey:auth data:[RCTConvert NSData:data] callback:^(NSData * signature, NSError * error) {
-//        if (signature) {
-//            resolve([RCTConvert NSString:[signature base64EncodedStringWithOptions:0]]);
-//        } else {
-//            ProcessError(error, reject);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(validatePassword,
-//                 instanceId:(NSString*)instanceId
-//                 password:(id)password
-//                 validatePasswordResolve:(RCTPromiseResolveBlock)resolve
-//                 validatePasswordReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthCorePassword * corePassword = UsePassword(password, _objectRegister, reject);
-//    if (!corePassword) {
-//        return;
-//    }
-//    [powerAuth validateCorePassword:corePassword callback:^(NSError * error) {
-//        if (error) {
-//            ProcessError(error, reject);
-//        } else {
-//            resolve(@YES);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(hasActivationRecoveryData,
-//                 instanceId:(NSString*)instanceId
-//                 hasActivationRecoveryDataResolve:(RCTPromiseResolveBlock)resolve
-//                 hasActivationRecoveryDataReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    resolve(@([powerAuth hasActivationRecoveryData]));
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(activationRecoveryData,
-//                 instanceId:(NSString*)instanceId
-//                 authentication:(NSDictionary*)authDict
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    [powerAuth activationRecoveryData:auth callback:^(PowerAuthActivationRecoveryData * data, NSError * error) {
-//        if (error) {
-//            ProcessError(error, reject);
-//        } else {
-//            NSDictionary *response = @{
-//                @"recoveryCode": data.recoveryCode,
-//                @"puk": data.puk
-//            };
-//            resolve(response);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(confirmRecoveryCode,
-//                 instanceId:(NSString*)instanceId
-//                 recoveryCode:(NSString*)recoveryCode
-//                 authentication:(NSDictionary*)authDict
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    [powerAuth confirmRecoveryCode:recoveryCode authentication:auth callback:^(BOOL alreadyConfirmed, NSError * error) {
-//        if (error) {
-//            ProcessError(error, reject);
-//        } else {
-//            resolve(alreadyConfirmed ? @YES : @NO);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
+PAJS_METHOD_START(activationIdentifier,
+                  PAJS_ARGUMENT(instanceId, NSString*))
+{
+    PA_BLOCK_START
+    resolve([powerAuth activationIdentifier]);
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(activationFingerprint,
+                 PAJS_ARGUMENT(instanceId, NSString*))
+{
+    PA_BLOCK_START
+    resolve([powerAuth activationFingerprint]);
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(removeActivationWithAuthentication,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    [powerAuth removeActivationWithAuthentication:auth callback:^(NSError * _Nullable error) {
+        if (error) {
+            ProcessError(error, reject);
+        } else {
+            resolve(@YES);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(removeActivationLocal,
+                  PAJS_ARGUMENT(instanceId, NSString*))
+{
+    PA_BLOCK_START
+    [powerAuth removeActivationLocal];
+    resolve(nil);
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(requestGetSignature,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*)
+                  PAJS_ARGUMENT(uriId, NSString*)
+                  PAJS_ARGUMENT(params, NSDictionary*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    NSError* error = nil;
+    PowerAuthAuthorizationHttpHeader* signature = [powerAuth requestGetSignatureWithAuthentication:auth uriId:uriId params:params error: &error];
+    
+    if (error) {
+        ProcessError(error, reject);
+    } else {
+        NSDictionary *response = @{
+            @"key": signature.key,
+            @"value": signature.value
+        };
+        resolve(response);
+    }
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(requestSignature,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*)
+                  PAJS_ARGUMENT(method, NSString*)
+                  PAJS_ARGUMENT(uriId, NSString*)
+                  PAJS_ARGUMENT(body, PAJS_NULLABLE_ARGUMENT NSString*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    NSError* error = nil;
+    PowerAuthAuthorizationHttpHeader* signature = [powerAuth requestSignatureWithAuthentication:auth method:method uriId:uriId body:[RCTConvert NSData:body] error:&error];
+    
+    if (error) {
+        ProcessError(error, reject);
+    } else {
+        NSDictionary *response = @{
+            @"key": signature.key,
+            @"value": signature.value
+        };
+        resolve(response);
+    }
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(offlineSignature,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*)
+                  PAJS_ARGUMENT(uriId, NSString*)
+                  PAJS_ARGUMENT(body, PAJS_NULLABLE_ARGUMENT NSString*)
+                  PAJS_ARGUMENT(nonce, PAJS_NONNULL_ARGUMENT NSString*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    NSError* error = nil;
+    NSString* signature = [powerAuth offlineSignatureWithAuthentication:auth uriId:uriId body:[RCTConvert NSData:body] nonce:nonce error:&error];
+    
+    if (error) {
+        ProcessError(error, reject);
+    } else {
+        resolve(signature);
+    }
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(verifyServerSignedData,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(data, PAJS_NONNULL_ARGUMENT NSString*)
+                  PAJS_ARGUMENT(signature, PAJS_NONNULL_ARGUMENT NSString*)
+                  PAJS_ARGUMENT(masterKey, BOOL))
+{
+    PA_BLOCK_START
+    BOOL result = [powerAuth verifyServerSignedData:[RCTConvert NSData:data] signature:signature masterKey:masterKey];
+    resolve(@(result));
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(unsafeChangePassword,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(oldPassword, id)
+                  PAJS_ARGUMENT(newPassword, id))
+{
+    PA_BLOCK_START
+    PowerAuthCorePassword * coreOldPassword = UsePassword(oldPassword, _objectRegister, reject);
+    if (!coreOldPassword) {
+        return;
+    }
+    PowerAuthCorePassword * newCorePassword = UsePassword(newPassword, _objectRegister, reject);
+    if (!newCorePassword) {
+        return;
+    }
+    BOOL result = [powerAuth unsafeChangeCorePasswordFrom:coreOldPassword to:newCorePassword];
+    resolve(@(result));
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(changePassword,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(oldPassword, id)
+                  PAJS_ARGUMENT(newPassword, id))
+{
+    PA_BLOCK_START
+    PowerAuthCorePassword * coreOldPassword = UsePassword(oldPassword, _objectRegister, reject);
+    if (!coreOldPassword) {
+        return;
+    }
+    PowerAuthCorePassword * newCorePassword = UsePassword(newPassword, _objectRegister, reject);
+    if (!newCorePassword) {
+        return;
+    }
+    [powerAuth changeCorePasswordFrom:coreOldPassword to:newCorePassword callback:^(NSError * error) {
+        if (error) {
+            ProcessError(error, reject);
+        } else {
+            resolve(@YES);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(addBiometryFactor,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(password, id)
+                  PAJS_ARGUMENT(foo, id))
+{
+    PA_BLOCK_START
+    // Workaround for native SDK. We're expectint MISSING or PEDNING_ACTIVATION
+    // but native SDK prioritize biometry-related error in this situation.
+    if (![powerAuth hasValidActivation]) {
+        reject(EC_MISSING_ACTIVATION, nil, nil);
+        return;
+    }
+    if ([powerAuth hasPendingActivation]) {
+        reject(EC_PENDING_ACTIVATION, nil, nil);
+        return;
+    }
+    PowerAuthCorePassword * corePassword = UsePassword(password, _objectRegister, reject);
+    if (!corePassword) {
+        return;
+    }
+    [powerAuth addBiometryFactorWithCorePassword:corePassword callback:^(NSError * error) {
+        if (error) {
+            ProcessError(error, reject);
+        } else {
+            resolve(nil);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(hasBiometryFactor,
+                  PAJS_ARGUMENT(instanceId, NSString*))
+{
+    PA_BLOCK_START
+    resolve(@([powerAuth hasBiometryFactor]));
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(removeBiometryFactor,
+                  PAJS_ARGUMENT(instanceId, NSString*))
+{
+    PA_BLOCK_START
+    if ([powerAuth removeBiometryFactor]) {
+        resolve(nil);
+    } else {
+        if (![powerAuth hasBiometryFactor]) {
+            reject(EC_BIOMETRY_NOT_CONFIGURED, @"Biometry not configured in this PowerAuth instance", nil);
+        } else {
+            reject(EC_REACT_NATIVE_ERROR, @"Failed to remove biometry factor", nil);
+        }
+    }
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(getBiometryInfo,
+                  PAJS_ARGUMENT(instanceId, NSString*))
+{
+    NSString *biometryType;
+    NSString *canAuthenticate;
+    switch ([PowerAuthKeychain biometricAuthenticationInfo].biometryType) {
+        case PowerAuthBiometricAuthenticationType_TouchID:
+            biometryType = @"FINGERPRINT";
+            break;
+        case PowerAuthBiometricAuthenticationType_FaceID:
+            biometryType = @"FACE";
+            break;
+        case PowerAuthBiometricAuthenticationType_None:
+        default:
+            biometryType = @"NONE";
+            break;
+    }
+    switch ([PowerAuthKeychain biometricAuthenticationInfo].currentStatus) {
+        case PowerAuthBiometricAuthenticationStatus_Available:
+            canAuthenticate = @"OK";
+            break;
+        case PowerAuthBiometricAuthenticationStatus_NotEnrolled:
+            canAuthenticate = @"NOT_ENROLLED";
+            break;
+        case PowerAuthBiometricAuthenticationStatus_NotAvailable:
+            canAuthenticate = @"NOT_AVAILABLE";
+            break;
+        case PowerAuthBiometricAuthenticationStatus_NotSupported:
+            canAuthenticate = @"NOT_SUPPORTED";
+            break;
+        case PowerAuthBiometricAuthenticationStatus_Lockout:
+            canAuthenticate = @"LOCKOUT";
+            break;
+    }
+    bool canUse = [PowerAuthKeychain canUseBiometricAuthentication];
+    NSDictionary *response = @{
+        @"isAvailable": canUse ? @YES : @NO,
+        @"biometryType": biometryType,
+        @"canAuthenticate": canAuthenticate
+    };
+    resolve(response);
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(fetchEncryptionKey,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*)
+                  PAJS_ARGUMENT(index, NSNumber*)) // TODO: changed from NSInteger, make sure it works
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    [powerAuth fetchEncryptionKey:auth index:[index integerValue]  callback:^(NSData * encryptionKey, NSError * error) {
+        if (encryptionKey) {
+            resolve([encryptionKey base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed]);
+        } else {
+            ProcessError(error, reject);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(signDataWithDevicePrivateKey,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*)
+                  PAJS_ARGUMENT(data, NSString*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    [powerAuth signDataWithDevicePrivateKey:auth data:[RCTConvert NSData:data] callback:^(NSData * signature, NSError * error) {
+        if (signature) {
+            resolve([RCTConvert NSString:[signature base64EncodedStringWithOptions:0]]);
+        } else {
+            ProcessError(error, reject);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(validatePassword,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(password, id))
+{
+    PA_BLOCK_START
+    PowerAuthCorePassword * corePassword = UsePassword(password, _objectRegister, reject);
+    if (!corePassword) {
+        return;
+    }
+    [powerAuth validateCorePassword:corePassword callback:^(NSError * error) {
+        if (error) {
+            ProcessError(error, reject);
+        } else {
+            resolve(@YES);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(hasActivationRecoveryData,
+                  PAJS_ARGUMENT(instanceId, NSString*))
+{
+    PA_BLOCK_START
+    resolve(@([powerAuth hasActivationRecoveryData]));
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(activationRecoveryData,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    [powerAuth activationRecoveryData:auth callback:^(PowerAuthActivationRecoveryData * data, NSError * error) {
+        if (error) {
+            ProcessError(error, reject);
+        } else {
+            NSDictionary *response = @{
+                @"recoveryCode": data.recoveryCode,
+                @"puk": data.puk
+            };
+            resolve(response);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(confirmRecoveryCode,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(recoveryCode, NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    [powerAuth confirmRecoveryCode:recoveryCode authentication:auth callback:^(BOOL alreadyConfirmed, NSError * error) {
+        if (error) {
+            ProcessError(error, reject);
+        } else {
+            resolve(alreadyConfirmed ? @YES : @NO);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
 ///// Function validate the status of biometry before the biometry is used. The function also
 ///// validate whether activation is present, or whether biometry key is configured.
 ///// - Parameters:
 /////   - sdk: PowerAuthSDK instance
 /////   - reject: Reject promise in case that biometry cannot be used.
 ///// - Returns: YES in case biometry can be used.
-//- (BOOL) validateBiometryStatusBeforeUse:(PowerAuthSDK*)sdk reject:(RCTPromiseRejectBlock)reject
-//{
-//    // Determine the biometry state in advance. This is due to fact that iOS impl.
-//    // doesn't support all biometry related error codes such as Android.
-//    // This will be fixed in 1.8.x release, so this code will be obsolete.
-//    NSString * errorCode = nil;
-//    NSString * errorMessage = nil;
-//    switch ([PowerAuthKeychain biometricAuthenticationInfo].currentStatus) {
-//        case PowerAuthBiometricAuthenticationStatus_Available:
-//            if ([sdk hasValidActivation] && ![sdk hasBiometryFactor]) {
-//                // Has activation, but biometry factor is not set
-//                errorCode = EC_BIOMETRY_NOT_CONFIGURED; errorMessage = @"Biometry factor is not configured";
-//            }
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_NotEnrolled:
-//            errorCode = EC_BIOMETRY_NOT_ENROLLED; errorMessage = @"Biometry is not enrolled on device";
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_NotSupported:
-//            errorCode = EC_BIOMETRY_NOT_SUPPORTED; errorMessage = @"Biometry is not supported";
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_NotAvailable:
-//            errorCode = EC_BIOMETRY_NOT_AVAILABLE; errorMessage = @"Biometry is not available";
-//            break;
-//        case PowerAuthBiometricAuthenticationStatus_Lockout:
-//            errorCode = EC_BIOMETRY_LOCKOUT; errorMessage = @"Biometry is locked out";
-//            break;
-//        default:
-//            break;
-//    }
-//    if (errorCode) {
-//        reject(errorCode, errorMessage, nil);
-//        return NO;
-//    } else {
-//        return YES;
-//    }
-//}
-//
-//RCT_REMAP_METHOD(authenticateWithBiometry,
-//                 instanceId:(nonnull NSString*)instanceId
-//                 prompt:(nonnull NSDictionary*)prompt
-//                 makeReusable:(BOOL)makeReusable
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    if (![self validateBiometryStatusBeforeUse:powerAuth reject:reject]) {
-//        return;
-//    }
-//    NSString * promptMessage = GetNSStringValueFromDict(prompt, @"promptMessage");
-//    NSString * cancelButton = GetNSStringValueFromDict(prompt, @"cancelButton");
-//    NSString * fallbackButton = GetNSStringValueFromDict(prompt, @"fallbackButton");
-//    LAContext * context = [[LAContext alloc] init];
-//    context.localizedReason = promptMessage;
-//    context.localizedCancelTitle = cancelButton;
-//    context.localizedFallbackTitle = fallbackButton ? fallbackButton : @""; // empty string hides the button
-//    [powerAuth authenticateUsingBiometryWithContext:context callback:^(PowerAuthAuthentication * authentication, NSError * error) {
-//        if (authentication) {
-//            // Allocate native object
-//            PowerAuthData * managedData = [[PowerAuthData alloc] initWithData:authentication.overridenBiometryKey cleanup:YES];
-//            // If reusable authentication is going to be created, then "keep alive" release policy is applied.
-//            // Basically, the data will be available up to 10 seconds from the last access.
-//            // If authentication is not reusable, then dispose biometric key after its 1st use. We still need
-//            // to combine it with "expire" policy to make sure that key don't remain in memory forever.
-//            NSArray * releasePolicy = makeReusable
-//                        ? @[ RP_KEEP_ALIVE(BIOMETRY_KEY_KEEP_ALIVE_TIME) ]
-//                        : @[ RP_AFTER_USE(1), RP_EXPIRE(BIOMETRY_KEY_KEEP_ALIVE_TIME) ];
-//            
-//            NSString * managedId = [self->_objectRegister registerObject:managedData tag:instanceId policies:releasePolicy];
-//            resolve(managedId);
-//        } else {
-//            ProcessError(error, reject);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(parseActivationCode,
-//                 activationCode:(NSString*)activationCode
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PowerAuthActivationCode *ac = [PowerAuthActivationCodeUtil parseFromActivationCode:activationCode];
-//    if (ac) {
-//        resolve(PatchNull(@{
-//            @"activationCode": ac.activationCode,
-//            @"activationSignature": ac.activationSignature ? ac.activationSignature : [NSNull null]
-//        }));
-//    } else {
-//        reject(EC_INVALID_ACTIVATION_CODE, @"Invalid activation code.", nil);
-//    }
-//}
-//
-//RCT_REMAP_METHOD(validateActivationCode,
-//                 activationCode:(NSString*)activationCode
-//                 validateActivationCodeResolve:(RCTPromiseResolveBlock)resolve
-//                 validateActivationCodeReject:(RCTPromiseRejectBlock)reject)
-//{
-//    resolve([PowerAuthActivationCodeUtil validateActivationCode:activationCode] ? @YES : @NO);
-//}
-//
-//RCT_REMAP_METHOD(parseRecoveryCode,
-//                 recoveryCode:(NSString*)recoveryCode
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PowerAuthActivationCode *ac = [PowerAuthActivationCodeUtil parseFromRecoveryCode:recoveryCode];
-//    if (ac) {
-//        resolve(PatchNull(@{
-//            @"activationCode": ac.activationCode,
-//            @"activationSignature": ac.activationSignature ? ac.activationSignature : [NSNull null]
-//        }));
-//    } else {
-//        reject(EC_INVALID_RECOVERY_CODE, @"Invalid recovery code.", nil);
-//    }
-//}
-//
-//RCT_REMAP_METHOD(validateRecoveryCode,
-//                 recoveryCode:(NSString*)recoveryCode
-//                 validateRecoveryCodeResolve:(RCTPromiseResolveBlock)resolve
-//                 validateRecoveryCodeReject:(RCTPromiseRejectBlock)reject)
-//{
-//    resolve([PowerAuthActivationCodeUtil validateRecoveryCode:recoveryCode] ? @YES : @NO);
-//}
-//
-//RCT_REMAP_METHOD(validateRecoveryPuk,
-//                 recoveryPuk:(NSString*)recoveryPuk
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    resolve([PowerAuthActivationCodeUtil validateRecoveryPuk:recoveryPuk] ? @YES : @NO);
-//}
-//
-//RCT_REMAP_METHOD(validateTypedCharacter,
-//                 utfCodepoint:(nonnull NSNumber*)utfCodepoint
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    resolve([PowerAuthActivationCodeUtil validateTypedCharacter:utfCodepoint.unsignedIntValue] ? @YES : @NO);
-//}
-//
-//RCT_REMAP_METHOD(correctTypedCharacter,
-//                 utfCodepoint:(nonnull NSNumber*)utfCodepoint
-//                 correctTypedCharacterResolve:(RCTPromiseResolveBlock)resolve
-//                 correctTypedCharacterReject:(RCTPromiseRejectBlock)reject)
-//{
-//    UInt32 corrected = [PowerAuthActivationCodeUtil validateAndCorrectTypedCharacter:utfCodepoint.unsignedIntValue];
-//    if (corrected == 0) {
-//        reject(EC_INVALID_CHARACTER, @"Invalid character cannot be corrected.", nil);
-//    } else {
-//        resolve([[NSNumber alloc] initWithInt:corrected]);
-//    }
-//}
-//
-//RCT_REMAP_METHOD(requestAccessToken,
-//                 instanceId:(NSString*)instanceId
-//                 tokenName:(nonnull NSString*)tokenName
-//                 authentication:(NSDictionary*)authDict
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
-//    if (!auth) return;
-//    
-//    [[powerAuth tokenStore] requestAccessTokenWithName:tokenName authentication:auth completion:^(PowerAuthToken * token, NSError * error) {
-//        if (error || token == nil) {
-//            ProcessError(error, reject);
-//        } else {
-//            resolve(@{
-//                @"tokenName": token.tokenName,
-//                @"tokenIdentifier": token.tokenIdentifier
-//            });
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(removeAccessToken,
-//                 instanceId:(NSString*)instanceId
-//                 tokenName:(nonnull NSString*)tokenName
-//                 resolve:(RCTPromiseResolveBlock)resolve
-//                 reject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    [[powerAuth tokenStore] removeAccessTokenWithName:tokenName completion:^(BOOL removed, NSError * error) {
-//        if (removed) {
-//            resolve(nil);
-//        } else {
-//            ProcessError(error, reject);
-//        }
-//    }];
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(hasLocalToken,
-//                 instanceId:(NSString*)instanceId
-//                 tokenName:(nonnull NSString*)tokenName
-//                 hasLocalTokenResolve:(RCTPromiseResolveBlock)resolve
-//                 hasLocalTokenReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    resolve([[powerAuth tokenStore] hasLocalTokenWithName:tokenName] ? @YES : @NO);
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(getLocalToken,
-//                 instanceId:(NSString*)instanceId
-//                 tokenName:(nonnull NSString*)tokenName
-//                 getLocalTokenResolve:(RCTPromiseResolveBlock)resolve
-//                 getLocalTokenRseject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthToken* token = [[powerAuth tokenStore] localTokenWithName:tokenName];
-//    if (token) {
-//        resolve(@{
-//            @"tokenName": token.tokenName,
-//            @"tokenIdentifier": token.tokenIdentifier
-//        });
-//    } else {
-//        reject(EC_LOCAL_TOKEN_NOT_AVAILABLE, @"Token with this name is not in the local store.", nil);
-//    }
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(removeLocalToken,
-//                 instanceId:(NSString*)instanceId
-//                 tokenName:(nonnull NSString*)tokenName
-//                 removeLocalTokenResolve:(RCTPromiseResolveBlock)resolve
-//                 removeLocalTokenReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    [[powerAuth tokenStore] removeLocalTokenWithName:tokenName];
-//    resolve(nil);
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(removeAllLocalTokens,
-//                 instanceId:(NSString*)instanceId
-//                 removeAllLocalTokensResolve:(RCTPromiseResolveBlock)resolve
-//                 removeAllLocalTokensReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    [[powerAuth tokenStore] removeAllLocalTokens];
-//    resolve(nil);
-//    PA_BLOCK_END
-//}
-//
-//RCT_REMAP_METHOD(generateHeaderForToken,
-//                 instanceId:(NSString*)instanceId
-//                 tokenName:(nonnull NSString*)tokenName
-//                 generateHeaderForTokenResolve:(RCTPromiseResolveBlock)resolve
-//                 generateHeaderForTokenReject:(RCTPromiseRejectBlock)reject)
-//{
-//    PA_BLOCK_START
-//    PowerAuthToken* token = [[powerAuth tokenStore] localTokenWithName:tokenName];
-//    if (token == nil) {
-//        reject(EC_LOCAL_TOKEN_NOT_AVAILABLE, @"This token is no longer available in the local store.", nil);
-//    }
-//    else if ([token canGenerateHeader]) {
-//        PowerAuthAuthorizationHttpHeader* header = [token generateHeader];
-//        if (header) {
-//            resolve(@{
-//                @"key": header.key,
-//                @"value": header.value
-//            });
-//        } else {
-//            reject(EC_CANNOT_GENERATE_TOKEN, @"Cannot generate header for this token.", nil);
-//        }
-//    } else {
-//        reject(EC_CANNOT_GENERATE_TOKEN, @"Cannot generate header for this token.", nil);
-//    }
-//    PA_BLOCK_END
-//}
+- (BOOL) validateBiometryStatusBeforeUse:(PowerAuthSDK*)sdk reject:(RCTPromiseRejectBlock)reject
+{
+    // Determine the biometry state in advance. This is due to fact that iOS impl.
+    // doesn't support all biometry related error codes such as Android.
+    // This will be fixed in 1.8.x release, so this code will be obsolete.
+    NSString * errorCode = nil;
+    NSString * errorMessage = nil;
+    switch ([PowerAuthKeychain biometricAuthenticationInfo].currentStatus) {
+        case PowerAuthBiometricAuthenticationStatus_Available:
+            if ([sdk hasValidActivation] && ![sdk hasBiometryFactor]) {
+                // Has activation, but biometry factor is not set
+                errorCode = EC_BIOMETRY_NOT_CONFIGURED; errorMessage = @"Biometry factor is not configured";
+            }
+            break;
+        case PowerAuthBiometricAuthenticationStatus_NotEnrolled:
+            errorCode = EC_BIOMETRY_NOT_ENROLLED; errorMessage = @"Biometry is not enrolled on device";
+            break;
+        case PowerAuthBiometricAuthenticationStatus_NotSupported:
+            errorCode = EC_BIOMETRY_NOT_SUPPORTED; errorMessage = @"Biometry is not supported";
+            break;
+        case PowerAuthBiometricAuthenticationStatus_NotAvailable:
+            errorCode = EC_BIOMETRY_NOT_AVAILABLE; errorMessage = @"Biometry is not available";
+            break;
+        case PowerAuthBiometricAuthenticationStatus_Lockout:
+            errorCode = EC_BIOMETRY_LOCKOUT; errorMessage = @"Biometry is locked out";
+            break;
+        default:
+            break;
+    }
+    if (errorCode) {
+        reject(errorCode, errorMessage, nil);
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+PAJS_METHOD_START(authenticateWithBiometry,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(prompt, PAJS_NONNULL_ARGUMENT NSDictionary*)
+                  PAJS_ARGUMENT(makeReusable, BOOL))
+{
+    PA_BLOCK_START
+    if (![self validateBiometryStatusBeforeUse:powerAuth reject:reject]) {
+        return;
+    }
+    NSString * promptMessage = GetNSStringValueFromDict(prompt, @"promptMessage");
+    NSString * cancelButton = GetNSStringValueFromDict(prompt, @"cancelButton");
+    NSString * fallbackButton = GetNSStringValueFromDict(prompt, @"fallbackButton");
+    LAContext * context = [[LAContext alloc] init];
+    context.localizedReason = promptMessage;
+    context.localizedCancelTitle = cancelButton;
+    context.localizedFallbackTitle = fallbackButton ? fallbackButton : @""; // empty string hides the button
+    [powerAuth authenticateUsingBiometryWithContext:context callback:^(PowerAuthAuthentication * authentication, NSError * error) {
+        if (authentication) {
+            // Allocate native object
+            PowerAuthData * managedData = [[PowerAuthData alloc] initWithData:authentication.overridenBiometryKey cleanup:YES];
+            // If reusable authentication is going to be created, then "keep alive" release policy is applied.
+            // Basically, the data will be available up to 10 seconds from the last access.
+            // If authentication is not reusable, then dispose biometric key after its 1st use. We still need
+            // to combine it with "expire" policy to make sure that key don't remain in memory forever.
+            NSArray * releasePolicy = makeReusable
+                        ? @[ RP_KEEP_ALIVE(BIOMETRY_KEY_KEEP_ALIVE_TIME) ]
+                        : @[ RP_AFTER_USE(1), RP_EXPIRE(BIOMETRY_KEY_KEEP_ALIVE_TIME) ];
+            
+            NSString * managedId = [self->_objectRegister registerObject:managedData tag:instanceId policies:releasePolicy];
+            resolve(managedId);
+        } else {
+            ProcessError(error, reject);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(parseActivationCode,
+                  PAJS_ARGUMENT(activationCode, NSString*))
+{
+    PowerAuthActivationCode *ac = [PowerAuthActivationCodeUtil parseFromActivationCode:activationCode];
+    if (ac) {
+        resolve(PatchNull(@{
+            @"activationCode": ac.activationCode,
+            @"activationSignature": ac.activationSignature ? ac.activationSignature : [NSNull null]
+        }));
+    } else {
+        reject(EC_INVALID_ACTIVATION_CODE, @"Invalid activation code.", nil);
+    }
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(validateActivationCode,
+                  PAJS_ARGUMENT(activationCode, NSString*))
+{
+    resolve([PowerAuthActivationCodeUtil validateActivationCode:activationCode] ? @YES : @NO);
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(parseRecoveryCode,
+                  PAJS_ARGUMENT(recoveryCode, NSString*))
+{
+    PowerAuthActivationCode *ac = [PowerAuthActivationCodeUtil parseFromRecoveryCode:recoveryCode];
+    if (ac) {
+        resolve(PatchNull(@{
+            @"activationCode": ac.activationCode,
+            @"activationSignature": ac.activationSignature ? ac.activationSignature : [NSNull null]
+        }));
+    } else {
+        reject(EC_INVALID_RECOVERY_CODE, @"Invalid recovery code.", nil);
+    }
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(validateRecoveryCode,
+                  PAJS_ARGUMENT(recoveryCode, NSString*))
+{
+    resolve([PowerAuthActivationCodeUtil validateRecoveryCode:recoveryCode] ? @YES : @NO);
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(validateRecoveryPuk,
+                  PAJS_ARGUMENT(recoveryPuk, NSString*))
+{
+    resolve([PowerAuthActivationCodeUtil validateRecoveryPuk:recoveryPuk] ? @YES : @NO);
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(validateTypedCharacter,
+                  PAJS_ARGUMENT(utfCodepoint, PAJS_NONNULL_ARGUMENT NSNumber*))
+{
+    resolve([PowerAuthActivationCodeUtil validateTypedCharacter:utfCodepoint.unsignedIntValue] ? @YES : @NO);
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(correctTypedCharacter,
+                  PAJS_ARGUMENT(utfCodepoint, PAJS_NONNULL_ARGUMENT NSNumber*))
+{
+    UInt32 corrected = [PowerAuthActivationCodeUtil validateAndCorrectTypedCharacter:utfCodepoint.unsignedIntValue];
+    if (corrected == 0) {
+        reject(EC_INVALID_CHARACTER, @"Invalid character cannot be corrected.", nil);
+    } else {
+        resolve([[NSNumber alloc] initWithInt:corrected]);
+    }
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(requestAccessToken,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(tokenName, PAJS_NONNULL_ARGUMENT NSString*)
+                  PAJS_ARGUMENT(authDict, NSDictionary*))
+{
+    PA_BLOCK_START
+    PowerAuthAuthentication *auth = [self constructAuthenticationFromDictionary:authDict reject:reject forCommit:NO];
+    if (!auth) return;
+    
+    [[powerAuth tokenStore] requestAccessTokenWithName:tokenName authentication:auth completion:^(PowerAuthToken * token, NSError * error) {
+        if (error || token == nil) {
+            ProcessError(error, reject);
+        } else {
+            resolve(@{
+                @"tokenName": token.tokenName,
+                @"tokenIdentifier": token.tokenIdentifier
+            });
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(removeAccessToken,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(tokenName, PAJS_NONNULL_ARGUMENT NSString*))
+{
+    PA_BLOCK_START
+    [[powerAuth tokenStore] removeAccessTokenWithName:tokenName completion:^(BOOL removed, NSError * error) {
+        if (removed) {
+            resolve(nil);
+        } else {
+            ProcessError(error, reject);
+        }
+    }];
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(hasLocalToken,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(tokenName, PAJS_NONNULL_ARGUMENT NSString*))
+{
+    PA_BLOCK_START
+    resolve([[powerAuth tokenStore] hasLocalTokenWithName:tokenName] ? @YES : @NO);
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(getLocalToken,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(tokenName, PAJS_NONNULL_ARGUMENT NSString*))
+{
+    PA_BLOCK_START
+    PowerAuthToken* token = [[powerAuth tokenStore] localTokenWithName:tokenName];
+    if (token) {
+        resolve(@{
+            @"tokenName": token.tokenName,
+            @"tokenIdentifier": token.tokenIdentifier
+        });
+    } else {
+        reject(EC_LOCAL_TOKEN_NOT_AVAILABLE, @"Token with this name is not in the local store.", nil);
+    }
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(removeLocalToken,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(tokenName, PAJS_NONNULL_ARGUMENT NSString*))
+{
+    PA_BLOCK_START
+    [[powerAuth tokenStore] removeLocalTokenWithName:tokenName];
+    resolve(nil);
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(removeAllLocalTokens,
+                  PAJS_ARGUMENT(instanceId, NSString*))
+{
+    PA_BLOCK_START
+    [[powerAuth tokenStore] removeAllLocalTokens];
+    resolve(nil);
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
+
+PAJS_METHOD_START(generateHeaderForToken,
+                  PAJS_ARGUMENT(instanceId, NSString*)
+                  PAJS_ARGUMENT(tokenName, PAJS_NONNULL_ARGUMENT NSString*))
+{
+    PA_BLOCK_START
+    PowerAuthToken* token = [[powerAuth tokenStore] localTokenWithName:tokenName];
+    if (token == nil) {
+        reject(EC_LOCAL_TOKEN_NOT_AVAILABLE, @"This token is no longer available in the local store.", nil);
+    }
+    else if ([token canGenerateHeader]) {
+        PowerAuthAuthorizationHttpHeader* header = [token generateHeader];
+        if (header) {
+            resolve(@{
+                @"key": header.key,
+                @"value": header.value
+            });
+        } else {
+            reject(EC_CANNOT_GENERATE_TOKEN, @"Cannot generate header for this token.", nil);
+        }
+    } else {
+        reject(EC_CANNOT_GENERATE_TOKEN, @"Cannot generate header for this token.", nil);
+    }
+    PA_BLOCK_END
+}
+PAJS_METHOD_END
 
 #pragma mark - Helper methods
 

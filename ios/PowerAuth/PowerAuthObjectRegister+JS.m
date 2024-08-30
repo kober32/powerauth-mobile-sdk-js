@@ -19,24 +19,15 @@
 #import "PAJS.h"
 // TODO: solve
 //#import "PowerAuthEncryptorModule.h"
-//#import <React/RCTInvalidating.h>
 
 @import PowerAuthCore;
-
-/*
- This class category exports several debug methods to JavaScript.
- The 'debug' methods are available only if library is compiled in DEBUG configuration.
- */
-@interface PowerAuthObjectRegister (JS) // <RCTInvalidating> TODO:// resolve
-@end
 
 @implementation PowerAuthObjectRegister (JS)
 
 // MARK: - JS interface
 
-- (void) invalidate
+- (void) PAJS_INVALIDATE_METHOD
 {
-    // RCTInvalidating
     // This is invoked by RN bridge when devmode reload is requested.
     // We should remove all objects from the register.
     [self removeAllObjectsWithTag:nil];
